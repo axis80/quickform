@@ -23,16 +23,18 @@ class QuickForm
     foreach($this->_config['fields'] as $fieldId => $fieldParams) {
 
       // Open wrapper class
-      if (!is_empty(@$fieldParams['wrapperClass'])) {
+      if (!empty(@$fieldParams['wrapperClass'])) {
         echo
           '<div ' .
-          'class="' . $fieldParams['wrapperClass']'">';
+          'class="' . $fieldParams['wrapperClass'] . '">';
       }
 
-      if (!is_empty(@$fieldParams['label'])) {
+      if (!empty(@$fieldParams['label'])) {
         echo
           '<label ' .
-          'class="' . @$fieldParams['labelClass'] . '">' .
+          'class="' . @$fieldParams['labelClass'] . '"' .
+          'for="' . $fieldId . '"' .
+          '>' .
           $fieldParams['label'] .
            '</label>';
       }
@@ -44,31 +46,50 @@ class QuickForm
         case 'tel':
           echo
             '<input ' .
-            'id="' . $fieldId .
-            '" name="' . $fieldId .
-            '" class="' . @$fieldParams['inputClass'] .
+            'type="' . $fieldParams['type'] . '" ' .
+            'id="' . $fieldId . '" ' .
+            'name="' . $fieldId . '" ' .
+            'class="' . @$fieldParams['inputClass'] . '" ' .
             (@$fieldParams['required'] === true ? 'required' : '') .
-            '">';
+            '>';
           break;
 
         case 'textarea':
           echo
-            '<textarea' .
-            'id="' . $fieldId .
-            '" name="' . $fieldId .
-            '" class="' . @$fieldParams['inputClass'] .
+            '<textarea ' .
+            'id="' . $fieldId . '" ' .
+            'name="' . $fieldId . '" ' .
+            'class="' . @$fieldParams['inputClass'] . '" ' .
             (@$fieldParams['required'] === true ? 'required' : '') .
-            '">' .
+            '>' .
             '</textarea>';
+          break;
+
+        case 'radio':
+          $count = 1;
+          foreach(@$fieldParams['options'] as $option) {
+            echo
+              '<label for="' . $fieldId . '-' . $count . '">' .
+              '<input ' .
+              'id="' . $fieldId . '-' . $count . '" ' .
+              'type="radio" ' .
+              'name="' . $fieldId . '" ' .
+              'value="' . $option .  '" ' .
+              '>' .
+              ' ' .
+              '<span>' . htmlentities($option, ENT_QUOTES, "UTF-8") . '</span>' .
+              '</label>';
+            $count++;
+          }
           break;
       }
 
-      if (!is_empty(@$fieldParams['helpText'])) {
+      if (!empty(@$fieldParams['helpText'])) {
         echo '<div class="' . @$fieldParams['helpClass'] . '">' . $fieldParams['helpText'] . '</label>';
       }
 
       // Close wrapper class
-      if (!is_empty(@$fieldParams['wrapperClass'])) {
+      if (!empty(@$fieldParams['wrapperClass'])) {
         echo '</div>';
       }
 

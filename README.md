@@ -48,13 +48,13 @@ everything that goes at the top of your file:
         'sales@example.com',
         'info@example.com'
       ],
-      'from' =>  'website@example.com'
+      'from' =>  'website@example.com',
       'replyto' =>  'bill@example.com',
       'subject' => 'Web Site Form Submission',
 
       // PHPMailer settings - see their docs for details
       'phpMailer' => [
-        'smtpDebug' = 0,
+        'smtpDebug' => 0,
         'isSmtp' => true,
         'host' => 'smtp.example.com',
         'smtpAuth' => true,
@@ -67,33 +67,45 @@ everything that goes at the top of your file:
       // Field definitions
       'fields' => [
         'name' => [
-          'label' => 'Your Name',
           'type' => 'text',
           'required' => true,
-          'wrapperClass' => 'form-group',
-          'inputClass' => 'form-control'
+          'inputClass' => 'form-control',
+          'label' => 'Your Name',
+          'labelClass' => 'control-label',
+          'wrapperClass' => 'form-group'
         ],
         'email' => [
-          'label' => 'Your Email Address',
           'type' => 'email',
           'required' => true,
-          'wrapperClass' => 'form-group',
           'inputClass' => 'form-control',
+          'wrapperClass' => 'form-group',
+          'label' => 'Your Email Address',
+          'labelClass' => 'control-label',
           'helpText' => 'Enter your email address',
           'helpClass' => 'form-text text-muted'
         ],
-        'comments' => [
-          'label' => 'Your Comments',
-          'type' => 'textarea',
+        'pizza' => [
+          'label' => 'Do you like pizza?',
+          'labelClass' => 'control-label',
+          'type' => 'radio',
+          'options' => ['Yes', 'No'],
           'required' => true,
           'wrapperClass' => 'form-group',
           'inputClass' => 'form-control'
+        ],
+        'comments' => [
+          'type' => 'textarea',
+          'required' => true,
+          'inputClass' => 'form-control',
+          'wrapperClass' => 'form-group',
+          'label' => 'Your Comments',
+          'labelClass' => 'control-label'
         ]
       ]
     ];
 
     /* Instantiate the class using the above configuration */
-    $qf = new Quickform($config);
+    $qf = new Quickform($qfConfig);
 
     /* Call the handler that intercepts and processes form POST submissions */
     $qf->formPostHandler();
@@ -105,10 +117,15 @@ to appear:
 
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <?php $qf->outputFormFields(); ?>
+    <button type="submit">Submit</button>
     </form>
 
-A complete contact page can be found in tests/SimpleContactForm.php,  You can
-use this as a starting point for building your own contact form.
+Note that QuickForm does not try to build the entire form for you - only to
+automate the output of the fields themselves, as marking those up is usually
+the most time-intensive part of building a contact form.  
+
+A complete HTML contact page can be found in tests/SimpleContactForm.php,  You
+can use this as a starting point for building your own contact form.
 
 That's pretty much it.  If your SMTP settings are correct, you should receive a
 notification email at the address(es) you specified every time the form is
