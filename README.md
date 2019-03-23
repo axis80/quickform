@@ -12,7 +12,7 @@ Form attributes and fields are defined in a config file, and submissions
 are sent via email using PHPMailer.
 
 Quickform does not currently perform validation of the values passed to it in
-the form fields. It merely checks whether required field have been completed.
+the form fields. It merely checks whether required fields have been filled out.
 This is sufficient for most small web sites.
 
 ## Requirements
