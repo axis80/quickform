@@ -8,7 +8,7 @@ process of writing the markup to output the form itself.
 
 Quickform is designed to minimize the time and effort it takes to get a
 new contact form up and running on a simple HTML site hosted on a PHP server.
-Form attributes and fields are defined in a config file, and submissions
+Form attributes and fields are defined in a config array, and submissions
 are sent via email using PHPMailer.
 
 Quickform does not currently perform validation of the values passed to it in
