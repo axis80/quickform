@@ -2,24 +2,43 @@
 
 namespace QuickForm;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class QuickForm
 {
 
   private $_config;
+  private $_fieldsWithErrors;
 
   function __construct($config) {
     $this->_config = $config;
+    $this->_fieldsWithErrors = array();
   }
 
 /**
-  * Outputs all form fields defined in the configuration.
-  *
-  * Iterates over all defined form fields and outputs them as HTML5.
+  * Outputs the form
   *
   * @return void
   */
-  public function outputFormFields()
+  public function renderForm()
   {
+
+    $currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+    echo
+      '<form ' .
+      'method="POST" ' .
+      'action="' . $currentUrl . '" ' .
+      (isset($this->_config['form']['formClass']) ? 'class="' . $this->_config['form']['formClass'] . '" ' : '') .
+      '>';
+
+    if (sizeof($this->_fieldsWithErrors)) {
+      echo '<div style="display: inline-block; background-color: #c00; color: #fff; padding: 7px;">Required fields were not completed. Please fill in the missing values below and resubmit the form.</div>';
+      echo '<br>';
+      echo '<br>';
+    }
+
     foreach($this->_config['fields'] as $fieldId => $fieldParams) {
 
       // Open wrapper class
@@ -36,7 +55,14 @@ class QuickForm
           'for="' . $fieldId . '"' .
           '>' .
           $fieldParams['label'] .
+          (in_array($fieldId, $this->_fieldsWithErrors) ? ' &nbsp; <span style="background-color: #c00; color: #fff; padding: 3px;">Required</span>' : '') .
            '</label>';
+      }
+
+      if (isset($_POST[$fieldId])) {
+        $value = $_POST[$fieldId];
+      } else {
+        $value = '';
       }
 
       switch(@$fieldParams['type']) {
@@ -44,12 +70,15 @@ class QuickForm
         case 'text':
         case 'email':
         case 'tel':
+
+
           echo
             '<input ' .
             'type="' . $fieldParams['type'] . '" ' .
             'id="' . $fieldId . '" ' .
             'name="' . $fieldId . '" ' .
             'class="' . @$fieldParams['inputClass'] . '" ' .
+            'value="' . htmlentities($value, ENT_QUOTES, "UTF-8") . '" ' .
             (@$fieldParams['required'] === true ? 'required' : '') .
             '>';
           break;
@@ -62,6 +91,7 @@ class QuickForm
             'class="' . @$fieldParams['inputClass'] . '" ' .
             (@$fieldParams['required'] === true ? 'required' : '') .
             '>' .
+            htmlentities($value, ENT_QUOTES, "UTF-8") .
             '</textarea>';
           break;
 
@@ -75,6 +105,7 @@ class QuickForm
               'type="radio" ' .
               'name="' . $fieldId . '" ' .
               'value="' . $option .  '" ' .
+              ($option === $value ? 'checked' : '') .
               '>' .
               ' ' .
               '<span>' . htmlentities($option, ENT_QUOTES, "UTF-8") . '</span>' .
@@ -95,11 +126,20 @@ class QuickForm
 
     }
 
+    echo
+      '<button ' .
+      'type="submit" ' .
+      (isset($this->_config['form']['buttonClass']) ? 'class="' . $this->_config['form']['buttonClass'] . '" ' : '') .
+      '>Submit</button>';
+
+    echo '</form>';
+
   }
 
   /**
-    * Traps form POST submissions, validates the presence of required fields,
-    * and sends email to the recipients specified in the config.
+    * Traps form POST submissions, validates the presence of required fields.
+    * If errors, this will return and allow form to be re-rendered.
+    * If no errors, sends email to the recipients specified in the config.
     *
     * @return void
     */
@@ -116,22 +156,22 @@ class QuickForm
     foreach($this->_config['fields'] as $fieldId => $fieldParams) {
 
       if (@$fieldParams['required'] == true) {
-
         if (isset($_POST[$fieldId])) {
-          if (is_empty(trim($_POST[$fieldId]))) {
+          if (empty(trim($_POST[$fieldId]))) {
             $formValid = false;
+            $this->_fieldsWithErrors[] = $fieldId;
           }
         } else {
           $formValid = false;
+          $this->_fieldsWithErrors[] = $fieldId;
         }
 
       }
 
     }
 
-    // If validation of required fields failed, output an error page
-    if (!$formValid) {
-      $this->_outputErrorPage();
+    // If validation of required fields failed, return now
+    if (sizeof($this->_fieldsWithErrors)) {
       return;
     }
 
@@ -178,7 +218,6 @@ class QuickForm
 
           $htmlContent .= '<h4>' . $fieldParams['label'] . '</h4>';
           $htmlContent .= '<p>' . htmlentities(@$_POST[$fieldId], ENT_QUOTES, "UTF-8") . '</p>';
-          $htmlContent .= '<br>';
 
           $plaintextContent .= $fieldParams['label'] . "\r\n";
           $plaintextContent .= @$_POST[$fieldId] . "\r\n";
@@ -189,11 +228,17 @@ class QuickForm
         $mail->AltBody = $plaintextContent;
 
         $mail->send();
-        echo 'Message has been sent';
+
+        header('Location: ' . $this->_config['successURL']);
+        exit;
 
     } catch (Exception $e) {
 
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+      $error = htmlentities($mail->ErrorInfo, ENT_QUOTES, "UTF-8");
+      // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+
+      echo '<html><head><title>Submission Error</title><body><br><div style="text-align: center; background-color: #c00; color: #fff; padding: 7px;">ERROR: Form submission failed due to a server error. Please click your browser\'s &quot;back&quot; button to return to the form and try again. If the problem persists please contact us to let us know.</div></body></html>';
+      exit;
     }
 
   }

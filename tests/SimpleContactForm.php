@@ -15,6 +15,11 @@ $qfConfig = [
   'replyto' =>  'bill@example.com',
   'subject' => 'Web Site Form Submission',
 
+  'form' => [
+    'formClass' => 'your-form-class',
+    'buttonClass' => 'your-button-class'
+  ],
+
   // PHPMailer settings - see their docs for details
   'phpMailer' => [
     'smtpDebug' => 0,
@@ -82,10 +87,7 @@ $qf->formPostHandler();
 
 <body>
 
-  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-  <?php $qf->outputFormFields(); ?>
-  <button type="submit">Submit</button>
-  </form>
+  <?php $qf->renderForm(); ?>
 
 </body>
 </html>

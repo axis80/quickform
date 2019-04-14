@@ -49,8 +49,14 @@ everything that goes at the top of your file:
         'info@example.com'
       ],
       'from' =>  'website@example.com',
-      'replyto' =>  'bill@example.com',
+      'replyto' =>  'bill@example.com', // optional
       'subject' => 'Web Site Form Submission',
+      'successURL' => 'https://example.com/formsuccess.html',
+
+      'form' => [
+        'formClass' => 'your-form-class', // optional
+        'buttonClass' => 'your-button-class' // optional
+      ],
 
       // PHPMailer settings - see their docs for details
       'phpMailer' => [
@@ -69,10 +75,10 @@ everything that goes at the top of your file:
         'name' => [
           'type' => 'text',
           'required' => true,
-          'inputClass' => 'form-control',
+          'inputClass' => 'form-control', // optional
           'label' => 'Your Name',
-          'labelClass' => 'control-label',
-          'wrapperClass' => 'form-group'
+          'labelClass' => 'control-label', // optional
+          'wrapperClass' => 'form-group' // optional
         ],
         'email' => [
           'type' => 'email',
@@ -115,14 +121,10 @@ everything that goes at the top of your file:
 Further on down your page, add the following code wherever you want your form
 to appear:
 
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <?php $qf->outputFormFields(); ?>
-    <button type="submit">Submit</button>
-    </form>
+    <?php $qf->renderForm(); ?>
 
-Note that QuickForm does not try to build the entire form for you - only to
-automate the output of the fields themselves, as marking those up is usually
-the most time-intensive part of building a contact form.  
+QuickForm renders the entire form for you, including a submit button at the
+bottom.  
 
 A complete HTML contact page can be found in tests/SimpleContactForm.php,  You
 can use this as a starting point for building your own contact form.
