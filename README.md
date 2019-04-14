@@ -142,7 +142,4 @@ different web hosts, etc. Sorry :-(
 
 ## Contributions
 Pull requests are welcome, particularly those which improve the documentation
-and examples.  Keep in mind that I'm not trying to turn this into a Swiss
-Army knife for form processing.  It's intended to be a quick and dirty way
-to get a contact form up and running on a 5-page web site. I'd like to keep it
-that way.
+and examples.
