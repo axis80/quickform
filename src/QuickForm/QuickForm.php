@@ -71,7 +71,6 @@ class QuickForm
         case 'email':
         case 'tel':
 
-
           echo
             '<input ' .
             'type="' . $fieldParams['type'] . '" ' .
@@ -95,24 +94,43 @@ class QuickForm
             '</textarea>';
           break;
 
-        case 'radio':
-          $count = 1;
-          foreach(@$fieldParams['options'] as $option) {
-            echo
-              '<label for="' . $fieldId . '-' . $count . '">' .
-              '<input ' .
-              'id="' . $fieldId . '-' . $count . '" ' .
-              'type="radio" ' .
-              'name="' . $fieldId . '" ' .
-              'value="' . $option .  '" ' .
-              ($option === $value ? 'checked' : '') .
-              '>' .
-              ' ' .
-              '<span>' . htmlentities($option, ENT_QUOTES, "UTF-8") . '</span>' .
-              '</label>';
-            $count++;
-          }
-          break;
+          case 'radio':
+            $count = 1;
+            foreach(@$fieldParams['options'] as $option) {
+              echo
+                '<label for="' . $fieldId . '-' . $count . '">' .
+                '<input ' .
+                'id="' . $fieldId . '-' . $count . '" ' .
+                'type="radio" ' .
+                'name="' . $fieldId . '" ' .
+                'value="' . $option .  '" ' .
+                ($option === $value ? 'checked' : '') .
+                '>' .
+                ' ' .
+                '<span>' . htmlentities($option, ENT_QUOTES, "UTF-8") . '</span>' .
+                '</label>';
+              $count++;
+            }
+            break;
+
+          case 'checkbox':
+            $count = 1;
+            foreach(@$fieldParams['options'] as $option) {
+              echo
+                '<label for="' . $fieldId . '-' . $count . '">' .
+                '<input ' .
+                'id="' . $fieldId . '-' . $count . '" ' .
+                'type="checkbox" ' .
+                'name="' . $fieldId . '[]" ' .
+                'value="' . $option .  '" ' .
+                (@in_array($option, $value) ? 'checked' : '') .
+                '>' .
+                ' ' .
+                '<span>' . htmlentities($option, ENT_QUOTES, "UTF-8") . '</span>' .
+                '</label>';
+              $count++;
+            }
+            break;
       }
 
       if (!empty(@$fieldParams['helpText'])) {
@@ -157,7 +175,7 @@ class QuickForm
 
       if (@$fieldParams['required'] == true) {
         if (isset($_POST[$fieldId])) {
-          if (empty(trim($_POST[$fieldId]))) {
+          if (trim($_POST[$fieldId]) === '') {
             $formValid = false;
             $this->_fieldsWithErrors[] = $fieldId;
           }
@@ -217,10 +235,22 @@ class QuickForm
         foreach($this->_config['fields'] as $fieldId => $fieldParams) {
 
           $htmlContent .= '<h4>' . $fieldParams['label'] . '</h4>';
-          $htmlContent .= '<p>' . htmlentities(@$_POST[$fieldId], ENT_QUOTES, "UTF-8") . '</p>';
-
           $plaintextContent .= $fieldParams['label'] . "\r\n";
-          $plaintextContent .= @$_POST[$fieldId] . "\r\n";
+
+          if (is_array(@$_POST[$fieldId])) {
+
+            $htmlContent .= '<p>';
+            foreach($_POST[$fieldId] as $thisValue) {
+              $htmlContent .= htmlentities($thisValue, ENT_QUOTES, "UTF-8") . '<br>';
+              $plaintextContent .= $thisValue . "\r\n";
+            }
+            $htmlContent .= '</p>';
+
+          } else {
+            $htmlContent .= '<p>' . htmlentities(@$_POST[$fieldId], ENT_QUOTES, "UTF-8") . '</p>';
+            $plaintextContent .= @$_POST[$fieldId] . "\r\n";
+          }
+
           $plaintextContent .= "\r\n";
         }
 
