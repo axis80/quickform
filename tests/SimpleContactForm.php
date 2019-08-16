@@ -61,6 +61,16 @@ $qfConfig = [
       'wrapperClass' => 'form-group',
       'inputClass' => 'form-control'
     ],
+    'toppings' => [
+      'type' => 'checkbox',
+      'required' => true,
+      'options' => ['Pepperoni','Mushrooms','Onions','Anchovies'],
+      'inputClass' => 'form-check-input',
+      'wrapperClass' => 'form-group',
+      'label' => 'Which toppings do you like?',
+      'labelClass' => 'control-label',
+      'itemLabelClass' => 'form-check-label'
+    ],
     'comments' => [
       'type' => 'textarea',
       'required' => true,

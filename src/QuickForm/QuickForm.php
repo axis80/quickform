@@ -117,7 +117,7 @@ class QuickForm
             $count = 1;
             foreach(@$fieldParams['options'] as $option) {
               echo
-                '<label for="' . $fieldId . '-' . $count . '">' .
+                '<label for="' . $fieldId . '-' . $count . '" class="' . $fieldParams['itemLabelClass'] . '">' .
                 '<input ' .
                 'id="' . $fieldId . '-' . $count . '" ' .
                 'type="checkbox" ' .
