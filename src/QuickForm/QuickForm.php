@@ -134,7 +134,7 @@ class QuickForm
       }
 
       if (!empty(@$fieldParams['helpText'])) {
-        echo '<div class="' . @$fieldParams['helpClass'] . '">' . $fieldParams['helpText'] . '</label>';
+        echo '<div class="' . @$fieldParams['helpClass'] . '">' . $fieldParams['helpText'] . '</div>';
       }
 
       // Close wrapper class
