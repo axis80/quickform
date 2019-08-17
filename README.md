@@ -70,6 +70,14 @@ everything that goes at the top of your file:
         'port' => 587
       ],
 
+      // ReCAPTCHA v2 settings
+      'reCaptchaV2' => [
+        'enabled' => true,
+        'siteKey' => '',
+        'secretKey' => '',
+        'wrapperClass' => ''
+      ],
+
       // Field definitions
       'fields' => [
         'name' => [
@@ -90,7 +98,9 @@ everything that goes at the top of your file:
           'helpText' => 'Enter your email address',
           'helpClass' => 'form-text text-muted'
         ],
-        'pizza' => [
+        'pizza' => [    'secretKey' => '',
+    'additionalClass' => ''
+
           'label' => 'Do you like pizza?',
           'labelClass' => 'control-label',
           'type' => 'radio',
@@ -142,6 +152,14 @@ can use this as a starting point for building your own contact form.
 That's pretty much it.  If your SMTP settings are correct, you should receive a
 notification email at the address(es) you specified every time the form is
 submitted.
+
+## ReCAPTCHA v2
+To enable ReCAPTCHA v2 ("I'm not a robot" checkbox) on the forms, retrieve a
+keypair from https://www.google.com/recaptcha/admin and enter them into your
+configuration.  You must also add this code snippet to the <head> section of
+your page:
+
+`<script src="https://www.google.com/recaptcha/api.js" async defer></script>`
 
 ## Support
 I'll do my best to keep up with issue reports that relate to bugs and/or

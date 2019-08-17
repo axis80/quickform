@@ -144,6 +144,30 @@ class QuickForm
 
     }
 
+    if ($this->_config['reCaptchaV2']['enabled'] === true) {
+
+      // Open wrapper class
+      if (!empty(@$this->_config['reCaptchaV2']['wrapperClass'])) {
+        echo
+          '<div ' .
+          'class="' . $this->_config['reCaptchaV2']['wrapperClass'] . '">';
+      }
+
+      // output reCaptchaV2
+      echo '<div class="g-recaptcha" data-sitekey="' . $this->_config['reCaptchaV2']['siteKey'] . '"></div>';
+
+      // output error message
+      if (in_array('reCaptchaV2', $this->_fieldsWithErrors)) {
+        echo '<span style="background-color: #c00; color: #fff; padding: 3px;">Required</span>';
+      }
+
+      // Close wrapper class
+      if (!empty(@$fieldParams['wrapperClass'])) {
+        echo '</div>';
+      }
+
+    }
+
     echo
       '<button ' .
       'type="submit" ' .
@@ -169,6 +193,34 @@ class QuickForm
 
     // We start out assuming it's valid
     $formValid = true;
+
+    // Check ReCAPTCHA (if enabled)
+    if ($this->_config['reCaptchaV2']['enabled'] === true) {
+
+      // Prepare POST request to Google ReCAPTCHA API server to verify submission
+      $post_data = http_build_query(
+          array(
+              'secret' => $this->_config['reCaptchaV2']['secretKey'],
+              'response' => $_POST['g-recaptcha-response'],
+              'remoteip' => $_SERVER['REMOTE_ADDR']
+          )
+      );
+      $opts = array('http' =>
+          array(
+              'method'  => 'POST',
+              'header'  => 'Content-type: application/x-www-form-urlencoded',
+              'content' => $post_data
+          )
+      );
+      $context  = stream_context_create($opts);
+      $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+      $result = json_decode($response);
+      if ($result->success !== true) {
+          $formValid = false;
+          $this->_fieldsWithErrors[] = 'reCaptchaV2';
+      }
+
+    }
 
     // Check all fields
     foreach($this->_config['fields'] as $fieldId => $fieldParams) {

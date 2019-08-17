@@ -32,6 +32,14 @@ $qfConfig = [
     'port' => 587
   ],
 
+  // ReCAPTCHA v2 settings
+  'reCaptchaV2' => [
+    'enabled' => true,
+    'siteKey' => '',
+    'secretKey' => '',
+    'wrapperClass' => ''
+  ],
+
   // Field definitions
   'fields' => [
     'name' => [
