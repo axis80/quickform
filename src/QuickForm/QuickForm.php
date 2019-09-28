@@ -51,7 +51,7 @@ class QuickForm
       if (!empty(@$fieldParams['label'])) {
         echo
           '<label ' .
-          'class="' . @$fieldParams['labelClass'] . '"' .
+          'class="' . @$fieldParams['labelClass'] . '" ' .
           'for="' . $fieldId . '"' .
           '>' .
           $fieldParams['label'] .
