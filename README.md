@@ -156,7 +156,7 @@ submitted.
 ## ReCAPTCHA v2
 To enable ReCAPTCHA v2 ("I'm not a robot" checkbox) on the forms, retrieve a
 keypair from https://www.google.com/recaptcha/admin and enter them into your
-configuration.  You must also add this code snippet to the <head> section of
+configuration.  You must also add this code snippet to the `<head>` section of
 your page:
 
 `<script src="https://www.google.com/recaptcha/api.js" async defer></script>`
