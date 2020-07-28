@@ -98,16 +98,14 @@ everything that goes at the top of your file:
           'helpText' => 'Enter your email address',
           'helpClass' => 'form-text text-muted'
         ],
-        'pizza' => [    'secretKey' => '',
-    'additionalClass' => ''
-
+        'pizza' => [
+          'type' => 'radio',
+          'required' => true,
+          'options' => ['Yes', 'No'],
+          'inputClass' => 'form-control',
           'label' => 'Do you like pizza?',
           'labelClass' => 'control-label',
-          'type' => 'radio',
-          'options' => ['Yes', 'No'],
-          'required' => true,
-          'wrapperClass' => 'form-group',
-          'inputClass' => 'form-control'
+          'wrapperClass' => 'form-group'
         ],
         'toppings' => [
           'type' => 'checkbox',
