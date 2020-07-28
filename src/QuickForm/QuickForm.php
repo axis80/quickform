@@ -162,7 +162,7 @@ class QuickForm
       }
 
       // Close wrapper class
-      if (!empty(@$fieldParams['wrapperClass'])) {
+      if (!empty(@$this->_config['reCaptchaV2']['wrapperClass'])) {
         echo '</div>';
       }
 
