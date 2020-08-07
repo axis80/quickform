@@ -152,6 +152,18 @@ That's pretty much it.  If your SMTP settings are correct, you should receive a
 notification email at the address(es) you specified every time the form is
 submitted.
 
+## Dynamically setting the reply-to header in the notification email
+When an end user submits the form, a notification email is sent using the "to"
+and "from" email addresses specified in your QuickForm configuration.  Normally,
+if the recipient of that email chooses to reply, the reply email address will be
+routed to the sender of the notification email.  This is not always desirable,
+as web site administrators and customer service staff will often blindly hit
+"reply" and send responses back to the wrong address.  It is possible to override
+this behavior by setting the `replytoField` config parameter to the name of a
+form field.  This will cause the reply-to header to be populated using the value
+entered into that field by the end user, so any replies will be routed to the
+person who submitted the form.
+
 ## ReCAPTCHA v2
 To enable ReCAPTCHA v2 ("I'm not a robot" checkbox) on the forms, retrieve a
 keypair from https://www.google.com/recaptcha/admin and enter them into your
