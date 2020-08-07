@@ -226,14 +226,33 @@ class QuickForm
     foreach($this->_config['fields'] as $fieldId => $fieldParams) {
 
       if (@$fieldParams['required'] == true) {
+
         if (isset($_POST[$fieldId])) {
-          if (trim($_POST[$fieldId]) === '') {
+
+          if ($fieldParams['type'] == 'checkbox') {
+
+            /* Checkbox fields require an array with at least one element */
+            if (count(@$_POST[$fieldId]) < 1) {
+              $formValid = false;
+              $this->_fieldsWithErrors[] = $fieldId;
+            }
+
+          } else {
+
+            /* All other fields require a non-empty string value */
+            if (trim(@$_POST[$fieldId]) === '') {
+              $formValid = false;
+              $this->_fieldsWithErrors[] = $fieldId;
+            }
+
+          }
+
+        } else {
+
+            /* Field is not present in POST data, so mark as invalid */
             $formValid = false;
             $this->_fieldsWithErrors[] = $fieldId;
-          }
-        } else {
-          $formValid = false;
-          $this->_fieldsWithErrors[] = $fieldId;
+
         }
 
       }
@@ -263,6 +282,16 @@ class QuickForm
           $mail->Port = $this->_config['phpMailer']['port'];
         }
 
+        /**
+         * Set reply-to address, which must be set before the From address. See
+         * https://stackoverflow.com/questions/10396264/phpmailer-reply-using-only-reply-to-address)
+         */
+        if (isset($this->_config['replytoField'])) {
+          $mail->addReplyTo(@$_POST[$this->_config['replytoField']]);
+        } elseif (isset($this->_config['replyto'])) {
+          $mail->addReplyTo($this->_config['replyto']);
+        }
+
         // Set sender, recipients, and reply-to
         $mail->setFrom($this->_config['from']);
         if (is_array($this->_config['to'])) {
@@ -271,10 +300,6 @@ class QuickForm
           }
         } else {
           $mail->addAddress($this->_config['to']);
-        }
-
-        if (isset($this->_config['replyto'])) {
-          $mail->addReplyTo($this->_config['replyto']);
         }
 
         // Content of email

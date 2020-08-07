@@ -13,6 +13,7 @@ $qfConfig = [
   ],
   'from' =>  'website@example.com',
   'replyto' =>  'bill@example.com',
+  'replytoField' => 'email', // optional - gets the reply-to address from a formfield (which you should set as required). overrides the 'replyto' setting
   'subject' => 'Web Site Form Submission',
 
   'form' => [
@@ -34,7 +35,7 @@ $qfConfig = [
 
   // ReCAPTCHA v2 settings
   'reCaptchaV2' => [
-    'enabled' => true,
+    'enabled' => false,
     'siteKey' => '',
     'secretKey' => '',
     'wrapperClass' => ''
@@ -106,7 +107,10 @@ $qf->formPostHandler();
 
 <body>
 
-  <?php $qf->renderForm(); ?>
+    <div class="container">
+        <h1>Quickform Demo</h1>
+        <?php $qf->renderForm(); ?>
+    </div>
 
 </body>
 </html>
