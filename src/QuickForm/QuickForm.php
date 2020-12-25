@@ -24,7 +24,7 @@ class QuickForm
   public function renderForm()
   {
 
-    $currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" . (isset($this->_config['onFailureScrollToId']) ? '#' . $this->_config['onFailureScrollToId'] : '');
 
     echo
       '<form ' .
