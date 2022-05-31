@@ -50,7 +50,7 @@ everything that goes at the top of your file:
       ],
       'from' =>  'website@example.com',
       'replyto' =>  'bill@example.com', // optional
-      'replytoField' => 'email' // optional - gets the reply-to address from a formfield (which you should set as required). overrides the 'replyto' setting
+      'replytoField' => 'email', // optional - gets the reply-to address from a formfield (which you should set as required). overrides the 'replyto' setting
       'subject' => 'Web Site Form Submission',
       'successURL' => 'https://example.com/formsuccess.html',
 
