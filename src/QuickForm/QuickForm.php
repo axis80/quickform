@@ -264,6 +264,14 @@ class QuickForm
       return;
     }
 
+    // If any honeypot fields are filled in, it's likely a bot, so redirect to success page without sending email
+    foreach($this->_config['fields'] as $fieldId => $fieldParams) {
+      if (@$fieldParams['isHoneyPot'] === true && !empty($_POST[$fieldId])) {
+        header('Location: ' . $this->_config['successURL'] . '?honeyPotTrap=1');
+        exit;
+      }
+    }
+    
     // Load PHPMailer
     $mail = new PHPMailer(true);
 

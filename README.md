@@ -99,6 +99,17 @@ everything that goes at the top of your file:
           'helpText' => 'Enter your email address',
           'helpClass' => 'form-text text-muted'
         ],
+        'phone' => [
+          'isHoneypot' => true,
+          'type' => 'phone',
+          'required' => true,
+          'inputClass' => 'form-control',
+          'wrapperClass' => 'form-group d-none',
+          'label' => 'Your Phone',
+          'labelClass' => 'control-label',
+          'helpText' => 'Enter your phone number',
+          'helpClass' => 'form-text text-muted'
+        ],
         'pizza' => [
           'type' => 'radio',
           'required' => true,
@@ -163,6 +174,14 @@ this behavior by setting the `replytoField` config parameter to the name of a
 form field.  This will cause the reply-to header to be populated using the value
 entered into that field by the end user, so any replies will be routed to the
 person who submitted the form.
+
+## Honeypot fields
+Any field can optionally be marked as a "honeypot" by setting isHoneypot to true.
+In addition to setting that flag, you should also assign it a CSS class that hides
+it from view. Bots will often fill out the field, but a valid user cannot, so 
+if a value is received in that field the submission will be treated as spam and
+discarded. In the example configuration above, the "phone" field is set as a 
+honeypot, and the "d-none" class is used to hide it.
 
 ## ReCAPTCHA v2
 To enable ReCAPTCHA v2 ("I'm not a robot" checkbox) on the forms, retrieve a
